@@ -10,13 +10,20 @@ const logoutBtn = document.getElementById("logoutBtn");
 const captureBtn = document.getElementById("captureBtn");
 const summarizeBtn = document.getElementById("summarizeBtn");
 const summaryBox = document.getElementById("summaryBox");
+const transferBtn = document.getElementById("transferBtn");
 const loggedInEmail = document.getElementById("loggedInEmail");
 const statusEl = document.getElementById("status");
 
 let lastConversationId = null;
+let lastSummaryText = null;
+let lastSource = null;
 
-chrome.storage.local.get(["token", "email"], (data) => {
+chrome.storage.local.get(["token", "email", "transferStatus"], (data) => {
   if (data.token) showMainView(data.email);
+  if (data.transferStatus) {
+    statusEl.textContent = data.transferStatus;
+    chrome.storage.local.remove(["transferStatus"]);
+  }
 });
 
 function showMainView(email) {
@@ -73,6 +80,7 @@ logoutBtn.addEventListener("click", () => {
     statusEl.textContent = "";
     summarizeBtn.classList.add("hidden");
     summaryBox.classList.add("hidden");
+    transferBtn.classList.add("hidden");
   });
 });
 
@@ -81,6 +89,7 @@ captureBtn.addEventListener("click", async () => {
   captureBtn.disabled = true;
   summarizeBtn.classList.add("hidden");
   summaryBox.classList.add("hidden");
+  transferBtn.classList.add("hidden");
 
   try {
     const { token } = await chrome.storage.local.get(["token"]);
@@ -97,6 +106,7 @@ captureBtn.addEventListener("click", async () => {
     }
 
     const source = tab.url.includes("claude.ai") ? "claude" : "chatgpt";
+    lastSource = source;
 
     const saveRes = await fetch(`${BACKEND_URL}/conversations`, {
       method: "POST",
@@ -150,6 +160,9 @@ summarizeBtn.addEventListener("click", async () => {
       statusEl.textContent = "Summary ready:";
       summaryBox.textContent = data.summary_text;
       summaryBox.classList.remove("hidden");
+      lastSummaryText = data.summary_text;
+      transferBtn.classList.remove("hidden");
+      transferBtn.textContent = lastSource === "claude" ? "Transfer to ChatGPT" : "Transfer to Claude";
     }
   } catch (err) {
     statusEl.textContent = "Could not reach the server.";
@@ -157,4 +170,17 @@ summarizeBtn.addEventListener("click", async () => {
   }
 
   summarizeBtn.disabled = false;
+});
+
+transferBtn.addEventListener("click", () => {
+  if (!lastSummaryText) return;
+
+  const targetUrl = lastSource === "claude" ? "https://chatgpt.com/" : "https://claude.ai/new";
+  statusEl.textContent = "Opening new chat... you can close this popup, it'll keep working.";
+
+  chrome.runtime.sendMessage({
+    action: "startTransfer",
+    text: lastSummaryText,
+    targetUrl,
+  });
 });
