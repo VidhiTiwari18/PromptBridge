@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessagesSquare, Layers, Sparkles as SparklesIcon } from "lucide-react";
+import ReactMarkdown from "react-markdown";
 import Logo from "../components/Logo";
 import SourceBadge from "../components/SourceBadge";
 import ConversationRow from "../components/ConversationRow";
@@ -53,6 +54,7 @@ export default function Dashboard({ email, onLogout }) {
 
   const platformCount = new Set(conversations.map((c) => c.source)).size;
   const summarizedCount = conversations.filter((c) => c.has_summary).length;
+
   return (
     <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
       <motion.nav
@@ -169,24 +171,25 @@ export default function Dashboard({ email, onLogout }) {
               <AnimatePresence>
               {detail.latest_summary && (
                 <motion.div
+                  className="summary-markdown"
                   initial={{ opacity: 0, height: 0 }}
                   animate={{ opacity: 1, height: "auto" }}
                   transition={{ duration: 0.4 }}
                   style={{
                     background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 14,
-                    padding: 20, marginBottom: 24, whiteSpace: "pre-wrap", fontSize: 13.5, lineHeight: 1.7, overflow: "hidden",
+                    padding: 20, marginBottom: 24, fontSize: 13.5, lineHeight: 1.7, overflow: "hidden",
                     boxShadow: "0 8px 24px rgba(0,0,0,0.2)"
                   }}
                 >
-                  {detail.latest_summary.summary_text}
+                  <ReactMarkdown>{detail.latest_summary.summary_text}</ReactMarkdown>
                 </motion.div>
               )}
               </AnimatePresence>
 
-              <div style={{ fontFamily: "Space Grotesk", fontWeight: 600, fontSize: 14, marginBottom: 12, color: "var(--text-muted)" }}>
+              <div style={{ fontFamily: "Space Grotesk", fontWeight: 600, fontSize: 14, marginBottom: 14, color: "var(--text-muted)" }}>
                 Raw messages
               </div>
-              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
                 {detail.raw_messages.map((m, i) => (
                   <motion.div
                     key={i}
@@ -194,14 +197,27 @@ export default function Dashboard({ email, onLogout }) {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.25, delay: i * 0.03 }}
                     style={{
+                      display: "flex", gap: 12,
                       background: m.role === "user" ? "var(--surface-2)" : "var(--surface)",
-                      border: "1px solid var(--border)", borderRadius: 10, padding: 14, fontSize: 13, lineHeight: 1.6
+                      borderLeft: `3px solid ${m.role === "user" ? "var(--violet)" : "var(--green)"}`,
+                      borderRadius: 10, padding: "16px 18px", fontSize: 13.5, lineHeight: 1.7
                     }}
                   >
-                    <div style={{ fontSize: 11, color: "var(--text-dim)", fontFamily: "JetBrains Mono", marginBottom: 6, textTransform: "uppercase" }}>
-                      {m.role}
+                    <div style={{
+                      width: 26, height: 26, borderRadius: "50%", flexShrink: 0,
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      background: m.role === "user" ? "rgba(124,140,255,0.15)" : "rgba(78,225,160,0.15)",
+                      color: m.role === "user" ? "var(--violet)" : "var(--green)",
+                      fontSize: 11, fontFamily: "Space Grotesk", fontWeight: 700
+                    }}>
+                      {m.role === "user" ? "U" : "A"}
                     </div>
-                    {m.content}
+                    <div>
+                      <div style={{ fontSize: 11, color: "var(--text-dim)", fontFamily: "JetBrains Mono", marginBottom: 4, textTransform: "uppercase" }}>
+                        {m.role}
+                      </div>
+                      {m.content}
+                    </div>
                   </motion.div>
                 ))}
               </div>

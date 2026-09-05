@@ -52,3 +52,14 @@ button{
 ::selection{
   background:rgba(124,140,255,0.3);
 }
+
+
+.summary-markdown h2, .summary-markdown h3 {
+  font-family: 'Space Grotesk', sans-serif;
+  margin: 12px 0 6px;
+  font-size: 15px;
+}
+.summary-markdown p { margin-bottom: 8px; }
+.summary-markdown strong { color: var(--text); }
+.summary-markdown ul { margin: 4px 0 8px 20px; }
+.summary-markdown li { margin-bottom: 4px; }
