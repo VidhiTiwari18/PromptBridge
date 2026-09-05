@@ -28,10 +28,14 @@ conversationsRouter.post("/", async (req, res) => {
 
 conversationsRouter.get("/", async (req, res) => {
   const { rows } = await query(
-    `SELECT id, source, title, message_count, captured_at
-     FROM conversations
-     WHERE user_id = $1
-     ORDER BY captured_at DESC
+    `SELECT
+       c.id, c.source, c.title, c.message_count, c.captured_at,
+       EXISTS (
+         SELECT 1 FROM summaries s WHERE s.conversation_id = c.id
+       ) AS has_summary
+     FROM conversations c
+     WHERE c.user_id = $1
+     ORDER BY c.captured_at DESC
      LIMIT 50`,
     [req.userId]
   );

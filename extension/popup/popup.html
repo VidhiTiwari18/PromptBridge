@@ -2,86 +2,127 @@
 <html>
 <head>
   <meta charset="UTF-8">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --bg: #0B0F1A;
+      --surface: #141B2E;
+      --surface-2: #1A2338;
+      --border: #242E45;
+      --border-strong: #39456B;
+      --text: #EDEFF7;
+      --text-muted: #8890A6;
+      --text-dim: #5B6380;
+      --violet: #7C8CFF;
+      --green: #4EE1A0;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       width: 340px;
-      font-family: -apple-system, Segoe UI, sans-serif;
-      padding: 16px;
-      background: #faf9f7;
+      font-family: 'Inter', sans-serif;
+      padding: 18px;
+      background: var(--bg);
+      color: var(--text);
     }
-    h1 {
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 600;
       font-size: 15px;
-      margin: 0 0 12px 0;
-      color: #1a1a1a;
+      margin-bottom: 18px;
+    }
+    .brand-mark {
+      width: 18px;
+      height: 18px;
+      border-radius: 6px;
+      background: linear-gradient(135deg, var(--violet), var(--green));
     }
     input {
       width: 100%;
-      padding: 8px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 10px 12px;
       margin-bottom: 8px;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      box-sizing: border-box;
+      border-radius: 8px;
       font-size: 13px;
+      font-family: 'Inter', sans-serif;
+      outline: none;
+      transition: border-color 0.2s;
     }
+    input:focus { border-color: var(--violet); }
     button {
       width: 100%;
-      padding: 10px;
+      padding: 11px;
       border: none;
-      border-radius: 8px;
-      background: #d97757;
-      color: white;
-      font-size: 14px;
+      border-radius: 9px;
+      font-size: 13px;
+      font-weight: 600;
       cursor: pointer;
       margin-bottom: 8px;
+      font-family: 'Inter', sans-serif;
+      transition: opacity 0.2s, transform 0.1s;
     }
-    button.secondary {
-      background: #eee;
-      color: #333;
+    button:active { transform: scale(0.98); }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-primary { background: var(--green); color: #052B1D; }
+    .btn-secondary {
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid var(--border-strong);
     }
-    button:hover { opacity: 0.9; }
-    button:disabled { background: #ccc; cursor: not-allowed; }
+    .btn-secondary:hover { background: var(--surface-2); color: var(--text); }
     #status {
       font-size: 12px;
-      color: #666;
-      margin-top: 8px;
+      color: var(--text-muted);
+      margin-top: 6px;
       min-height: 16px;
+      line-height: 1.5;
     }
     .hidden { display: none; }
     #loggedInEmail {
       font-size: 12px;
-      color: #999;
-      margin-bottom: 10px;
+      color: var(--text-dim);
+      font-family: 'JetBrains Mono', monospace;
+      margin-bottom: 14px;
     }
     #summaryBox {
       font-size: 12px;
-      background: white;
-      border: 1px solid #eee;
-      border-radius: 8px;
-      padding: 10px;
-      margin-top: 8px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+      margin-top: 4px;
+      margin-bottom: 8px;
       max-height: 220px;
       overflow-y: auto;
       white-space: pre-wrap;
+      line-height: 1.6;
+      color: var(--text-muted);
     }
+    a { color: var(--violet); text-decoration: none; }
   </style>
 </head>
 <body>
-  <h1>PromptBridge</h1>
+  <div class="brand"><span class="brand-mark"></span>PromptBridge</div>
 
   <div id="loginView">
     <input type="email" id="emailInput" placeholder="Email">
     <input type="password" id="passwordInput" placeholder="Password">
-    <button id="loginBtn">Log in</button>
-    <button id="registerBtn">Register instead</button>
+    <button id="loginBtn" class="btn-primary">Log in</button>
+    <button id="registerBtn" class="btn-secondary">Register instead</button>
   </div>
 
   <div id="mainView" class="hidden">
     <div id="loggedInEmail"></div>
-    <button id="captureBtn">Capture this conversation</button>
-    <button id="summarizeBtn" class="secondary hidden">Summarize it</button>
+    <button id="captureBtn" class="btn-primary">Capture this conversation</button>
+    <button id="summarizeBtn" class="btn-secondary hidden">Summarize it</button>
     <div id="summaryBox" class="hidden"></div>
-    <button id="transferBtn" class="hidden"></button>
-    <button id="logoutBtn" class="secondary">Log out</button>
+    <button id="transferBtn" class="btn-primary hidden"></button>
+    <button id="logoutBtn" class="btn-secondary">Log out</button>
   </div>
 
   <div id="status"></div>

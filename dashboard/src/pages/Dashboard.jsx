@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { MessagesSquare, Layers, Sparkles as SparklesIcon } from "lucide-react";
 import Logo from "../components/Logo";
 import SourceBadge from "../components/SourceBadge";
 import ConversationRow from "../components/ConversationRow";
@@ -50,6 +51,8 @@ export default function Dashboard({ email, onLogout }) {
     setSummarizing(false);
   }
 
+  const platformCount = new Set(conversations.map((c) => c.source)).size;
+  const summarizedCount = conversations.filter((c) => c.has_summary).length;
   return (
     <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
       <motion.nav
@@ -71,7 +74,22 @@ export default function Dashboard({ email, onLogout }) {
         </div>
       </motion.nav>
 
-      <div style={{ display: "flex", flex: 1, maxWidth: 1160, margin: "0 auto", width: "100%" }}>        <motion.div
+      <motion.div
+        initial={{ opacity: 0, y: -6 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.05 }}
+        style={{
+          maxWidth: 1160, margin: "0 auto", width: "100%",
+          display: "flex", gap: 12, padding: "20px 32px 0"
+        }}
+      >
+        <StatPill icon={<Layers size={14} />} label="Conversations" value={conversations.length} />
+        <StatPill icon={<MessagesSquare size={14} />} label="Platforms" value={platformCount} />
+        <StatPill icon={<SparklesIcon size={14} />} label="Summarized" value={summarizedCount} />
+      </motion.div>
+
+      <div style={{ display: "flex", flex: 1, maxWidth: 1160, margin: "0 auto", width: "100%" }}>
+        <motion.div
           initial={{ opacity: 0, x: -12 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.4, delay: 0.1 }}
@@ -82,7 +100,11 @@ export default function Dashboard({ email, onLogout }) {
           </div>
           {loading && <div style={{ color: "var(--text-muted)", fontSize: 13 }}>Loading...</div>}
           {!loading && conversations.length === 0 && (
-            <div style={{ color: "var(--text-muted)", fontSize: 13, lineHeight: 1.6 }}>
+            <div style={{
+              color: "var(--text-muted)", fontSize: 13, lineHeight: 1.6,
+              background: "var(--surface)", border: "1px dashed var(--border-strong)",
+              borderRadius: 12, padding: 18
+            }}>
               Nothing captured yet. Open Claude or ChatGPT, click the PromptBridge extension icon, and capture a conversation.
             </div>
           )}
@@ -115,7 +137,8 @@ export default function Dashboard({ email, onLogout }) {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
-            >              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 24 }}>
+            >
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 24 }}>
                 <div>
                   <h2 style={{ fontFamily: "Space Grotesk", fontWeight: 600, fontSize: 22, marginBottom: 8 }}>
                     {detail.title || "Untitled conversation"}
@@ -136,7 +159,8 @@ export default function Dashboard({ email, onLogout }) {
                     transition={summarizing ? { repeat: Infinity, duration: 1.1 } : {}}
                     style={{
                       background: "var(--green)", color: "#052B1D", fontWeight: 600, fontSize: 13,
-                      padding: "10px 18px", borderRadius: 8
+                      padding: "10px 18px", borderRadius: 8,
+                      boxShadow: "0 4px 16px rgba(78,225,160,0.25)"
                     }}
                   >{summarizing ? "Summarizing..." : "Summarize"}</motion.button>
                 )}
@@ -150,7 +174,8 @@ export default function Dashboard({ email, onLogout }) {
                   transition={{ duration: 0.4 }}
                   style={{
                     background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 14,
-                    padding: 20, marginBottom: 24, whiteSpace: "pre-wrap", fontSize: 13.5, lineHeight: 1.7, overflow: "hidden"
+                    padding: 20, marginBottom: 24, whiteSpace: "pre-wrap", fontSize: 13.5, lineHeight: 1.7, overflow: "hidden",
+                    boxShadow: "0 8px 24px rgba(0,0,0,0.2)"
                   }}
                 >
                   {detail.latest_summary.summary_text}
@@ -185,6 +210,20 @@ export default function Dashboard({ email, onLogout }) {
           </AnimatePresence>
         </div>
       </div>
+    </div>
+  );
+}
+
+function StatPill({ icon, label, value }) {
+  return (
+    <div style={{
+      display: "flex", alignItems: "center", gap: 8,
+      background: "var(--surface)", border: "1px solid var(--border)",
+      borderRadius: 10, padding: "10px 14px"
+    }}>
+      <span style={{ color: "var(--violet)" }}>{icon}</span>
+      <span style={{ fontFamily: "Space Grotesk", fontWeight: 600, fontSize: 15 }}>{value}</span>
+      <span style={{ fontSize: 12, color: "var(--text-muted)" }}>{label}</span>
     </div>
   );
 }
