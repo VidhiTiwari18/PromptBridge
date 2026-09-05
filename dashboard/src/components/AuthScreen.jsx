@@ -29,15 +29,29 @@ export default function AuthScreen({ onAuth }) {
   }
 
   return (
-    <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
+    <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: 24, position: "relative", overflow: "hidden" }}>
+      <div style={{
+        position: "absolute", width: 380, height: 380, borderRadius: "50%",
+        background: "radial-gradient(circle, rgba(124,140,255,0.18), transparent 70%)",
+        filter: "blur(60px)", top: "10%", left: "12%", pointerEvents: "none"
+      }} />
+      <div style={{
+        position: "absolute", width: 340, height: 340, borderRadius: "50%",
+        background: "radial-gradient(circle, rgba(78,225,160,0.14), transparent 70%)",
+        filter: "blur(60px)", bottom: "8%", right: "14%", pointerEvents: "none"
+      }} />
+
       <motion.div
         initial={{ opacity: 0, y: 16, scale: 0.97 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-        style={{ width: 360 }}
+        style={{ width: 360, position: "relative", zIndex: 1 }}
       >
         <div style={{ display: "flex", justifyContent: "center", marginBottom: 36 }}><Logo /></div>
-        <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 16, padding: 32, overflow: "hidden" }}>
+        <div style={{
+          background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 16,
+          padding: 32, overflow: "hidden", boxShadow: "0 20px 50px rgba(0,0,0,0.35)"
+        }}>
           <AnimatePresence mode="wait">
             <motion.div
               key={mode}
@@ -45,7 +59,8 @@ export default function AuthScreen({ onAuth }) {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: mode === "login" ? 12 : -12 }}
               transition={{ duration: 0.25 }}
-            >              <h1 style={{ fontFamily: "Space Grotesk", fontWeight: 600, fontSize: 20, marginBottom: 6 }}>
+            >
+              <h1 style={{ fontFamily: "Space Grotesk", fontWeight: 600, fontSize: 20, marginBottom: 6 }}>
                 {mode === "login" ? "Welcome back" : "Create an account"}
               </h1>
               <p style={{ color: "var(--text-muted)", fontSize: 13, marginBottom: 24 }}>
@@ -67,7 +82,8 @@ export default function AuthScreen({ onAuth }) {
                   disabled={loading}
                   style={{
                     background: "var(--green)", color: "#052B1D", fontWeight: 600, fontSize: 14,
-                    padding: 12, borderRadius: 9, marginTop: 6, opacity: loading ? 0.6 : 1
+                    padding: 12, borderRadius: 9, marginTop: 6, opacity: loading ? 0.6 : 1,
+                    boxShadow: "0 8px 24px rgba(78,225,160,0.3)"
                   }}
                 >
                   {loading ? "Please wait..." : (mode === "login" ? "Log in" : "Create account")}
