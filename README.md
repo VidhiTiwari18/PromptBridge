@@ -4,7 +4,9 @@
 
 > Switching between AI tools usually means starting from zero — retyping context, re-explaining what you were working on. PromptBridge captures the conversation you already have, compresses it into a dense context package, and drops it straight into the new chat's input box.
 
-<!-- 🎬 DEMO GIF GOES HERE — capture → summarize → transfer, end to end -->
+**Live:** [Landing page](https://prompt-bridge-landing-seven.vercel.app) · [Dashboard](https://prompt-bridge-pi.vercel.app) · [API](https://promptbridge.onrender.com/health)
+
+*(Note: the backend is on Render's free tier and may take ~30-50 seconds to wake up on first request after a period of inactivity.)*
 
 ---
 
@@ -15,9 +17,6 @@
 3. **Transfer** — click "Transfer," and the extension opens a new tab on the other platform and types the summary straight into the input box, ready to send.
 
 A companion **dashboard** (React) lets you log in and browse every conversation you've captured, view its summary, and see quick stats across your account.
-
-<!-- 📸 SCREENSHOT: dashboard view -->
-<!-- 📸 SCREENSHOT: extension popup mid-flow -->
 
 ---
 
@@ -112,8 +111,7 @@ npm run dev
 
 - Gemini as a third supported platform
 - Automated tests for the backend routes
-- Deployed, hosted versions of the backend and dashboard so this doesn't require local setup to try
-
+- A custom domain instead of the default Render/Vercel subdomains
 ---
 
 ## Challenges worth mentioning
