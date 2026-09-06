@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "description": "Capture, summarize, and transfer AI chat context across platforms",
   "permissions": ["activeTab", "storage", "scripting"],
-  "host_permissions": ["https://claude.ai/*", "https://chatgpt.com/*", "http://localhost:3000/*"],
+  "host_permissions": ["https://claude.ai/*", "https://chatgpt.com/*", "https://promptbridge.onrender.com/*"],
   "action": {
     "default_popup": "popup/popup.html"
   },

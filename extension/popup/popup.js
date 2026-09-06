@@ -1,4 +1,4 @@
-const BACKEND_URL = "http://localhost:3000";
+const BACKEND_URL = "https://promptbridge.onrender.com";
 
 const loginView = document.getElementById("loginView");
 const mainView = document.getElementById("mainView");

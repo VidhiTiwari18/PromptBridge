@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:3000";
+const BASE_URL = "https://promptbridge.onrender.com";
 
 function getToken() {
   return localStorage.getItem("pb_token");
